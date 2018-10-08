@@ -221,6 +221,6 @@ elif my_dict['--subs_mat'] == 0 and my_dict['--block_size'] == 0:
 else: #exit script if the previous conditions do not hold
   sys.exit("syntax is caseofuse7-4.py --input filename [--subs_mat matrixname --block_size number]")
 
-# python.exe caseofuse7-4.py --input GHRs.fasta --subs_mat blosum62 --block_size 90 
+# python.exe align.py --input GHRs.fasta --subs_mat blosum62 --block_size 90 
 
 
