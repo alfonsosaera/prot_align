@@ -1,5 +1,7 @@
 import sys # to read arguments from command line
 
+ERROR1 = "syntax is align.py --input filename [--subs_mat matrixname --block_size number]"
+
 def print_dp_matrix(pattern, text, dp_matrix):
   # print the dynamic programming matrix with row and cols titles
   header = list(" -"+text)
@@ -75,7 +77,7 @@ def edit_distance_dp(pattern,text, substitution_matrix):
         dp_matrix[i-1][j] - 2) #deletion
   # Print matrix, comment for big alignments
   #print_dp_matrix(pattern, text, dp_matrix)
-  # Generate score and alignment
+  # Generate score and CIGAR
   score = dp_matrix[i][j]
   CIGAR = backtrace_matrix(pattern, text, dp_matrix)
   return (score, CIGAR)
@@ -178,7 +180,7 @@ my_dict = {'--input': 0, '--subs_mat': 0, '--block_size': 0}
 
 #add arguments to dictionary
 if len(sys.argv) < 3: #exit script if not enough passed arguments
-  sys.exit("syntax is caseofuse7-4.py --input filename [--subs_mat matrixname --block_size number]")
+  sys.exit(ERROR1)
 else:
   for i in range(1,len(sys.argv)):
     if sys.argv[i] in my_dict.keys():
@@ -188,7 +190,7 @@ else:
 
 #pass arguments to function
 if my_dict['--input'] == 0: #exit script if no filename provided
-  sys.exit("syntax is caseofuse7-4.py --input filename [--subs_mat matrixname --block_size number]")
+  sys.exit(ERROR1)
 elif my_dict['--subs_mat'] != 0 and my_dict['--block_size'] != 0:
   print nw_protein(my_dict['--input'], my_dict['--subs_mat'], int(my_dict['--block_size']))
 elif my_dict['--subs_mat'] != 0 and my_dict['--block_size'] == 0:
@@ -198,6 +200,6 @@ elif my_dict['--subs_mat'] == 0 and my_dict['--block_size'] != 0:
 elif my_dict['--subs_mat'] == 0 and my_dict['--block_size'] == 0:
   print nw_protein(my_dict['--input'])
 else: #exit script if the previous conditions do not hold
-  sys.exit("syntax is caseofuse7-4.py --input filename [--subs_mat matrixname --block_size number]")
+  sys.exit(ERROR1)
 
 # py -2.7 align.py --input GHRs.fasta --subs_mat blosum62 --block_size 90
