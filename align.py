@@ -184,7 +184,7 @@ def nw_protein(fasta_file, substitution_matrix = "blosum62", block_size = 70):
   # score of the alignment
   # substitution_matrix and block_size are optional, default are blosum62 and 70
   (score, alignment, CIGAR) = print_alignment(fasta_file, substitution_matrix, block_size) #CIGAR only for testing. Comment next line unless testing
-  #print CIGAR
+  #print CIGAR # this line is for testing
   return "\nAlignment score is: " + str(score) + "\n" + alignment
 
 ##################################
