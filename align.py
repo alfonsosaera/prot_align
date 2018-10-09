@@ -1,9 +1,7 @@
 import sys # to read arguments from command line
 
 def print_dp_matrix(pattern, text, dp_matrix):
-  # print the dynamic programming matrix
-  # added row and cols titles
-  
+  # print the dynamic programming matrix with row and cols titles
   header = list(" -"+text)
   rows = list("-"+pattern)
   print ("The dynamic programming table is:")
@@ -17,13 +15,13 @@ def print_dp_matrix(pattern, text, dp_matrix):
       print '{:4}'.format(val),
       #print ('{:4}'.format(val), end="") python 3
     print
-  print 
+  print
 
-  
+
 
 def backtrace_matrix(pattern, text, dp_matrix):
   # choose pathway in dynamic matrix and generate alignment pattern (MDIMM...)
-  
+
   i = len(pattern)
   j = len(text)
   alignment = []
@@ -47,12 +45,12 @@ def backtrace_matrix(pattern, text, dp_matrix):
     for _ in range(j): alignment.insert(0, "I")
   return alignment
 
-  
-  
+
+
 def score_match(pair, substitution_matrix):
   # read substitution matrix when match-missmatch in edit_distance_dp function
   # this version only works with blosum45, blosum62 and blosum80
-  
+
   from Bio.SubsMat import MatrixInfo # get matrix using biopython
   # choose matrix depending on passed argument
   if substitution_matrix == "blosum62":
@@ -67,8 +65,8 @@ def score_match(pair, substitution_matrix):
   else:
     return matrix[tuple(reversed(pair))]
 
-	
-	
+
+
 def edit_distance_dp(pattern,text, substitution_matrix):
   # Init
   dp_matrix = [[0 for i in range(len(text)+1)] for j in range(len(pattern)+1)]
@@ -90,11 +88,11 @@ def edit_distance_dp(pattern,text, substitution_matrix):
   alignment = backtrace_matrix(pattern, text, dp_matrix)
   return (score, alignment)
 
-  
+
 
 def pretty_alignment(pattern,text,substitution_matrix):
   # add gaps to sequences to generate alignment and create line with | marking identities
-  
+
   (score, alignment) = edit_distance_dp(pattern,text,substitution_matrix)
   line1 = ""
   line2 = ""
@@ -126,11 +124,11 @@ def pretty_alignment(pattern,text,substitution_matrix):
       text_index += 1
   return line1, line2, line3, score, alignment #alignment only for testing
 
-  
-  
+
+
 def read_fasta(file):
   # read fasta file and generate list of lists with name and seq
-  
+
   list = []
   f = open(file, 'r')
   header = f.readline()
@@ -148,12 +146,12 @@ def read_fasta(file):
     list.append(seq)
   return list
 
-  
-  
+
+
 def print_alignment(fasta_file, substitution_matrix, block_size):
   # get first 2 seq names and seqs from input file
   # generate a "paper-like" alignment with the read sequences
-  
+
   pattern,text = read_fasta(fasta_file)[0][1], read_fasta(fasta_file)[1][1]
   pattern_name, text_name = read_fasta(fasta_file)[0][0], read_fasta(fasta_file)[1][0]
   line1, line2, line3, score, alignment = pretty_alignment(pattern,text,substitution_matrix) #alignment only for testing
@@ -176,21 +174,21 @@ def print_alignment(fasta_file, substitution_matrix, block_size):
         break
     return score, result, alignment #remove alignment only for testing
 
-	
-	
+
+
 def nw_protein(fasta_file, substitution_matrix = "blosum62", block_size = 70):
   # print alignment of 2 sequences in input fasta and the generate score
   # substitution_matrix and block_size are optional, default are blosum62 and 70
-  
-  (score, alignment, line2) = print_alignment(fasta_file, substitution_matrix, block_size)  #line2 only for testing. Comment next line unless testing 
+
+  (score, alignment, line2) = print_alignment(fasta_file, substitution_matrix, block_size)  #line2 only for testing. Comment next line unless testing
   #print line2
   return "\nAlignment score is: " + str(score) + "\n" + alignment
 
-  
-  
-  
-  
-##################################  
+
+
+
+
+##################################
 # reading command line arguments #
 ##################################
 
@@ -198,9 +196,9 @@ def nw_protein(fasta_file, substitution_matrix = "blosum62", block_size = 70):
 my_dict = {'--input': 0, '--subs_mat': 0, '--block_size': 0}
 
 #add arguments to dictionary
-if len(sys.argv) < 3: #exit script if not enough passed arguments 
+if len(sys.argv) < 3: #exit script if not enough passed arguments
   sys.exit("syntax is caseofuse7-4.py --input filename [--subs_mat matrixname --block_size number]")
-else:  
+else:
   for i in range(1,len(sys.argv)):
     if sys.argv[i] in my_dict.keys():
       my_dict[sys.argv[i]] = sys.argv[i+1]
@@ -221,6 +219,4 @@ elif my_dict['--subs_mat'] == 0 and my_dict['--block_size'] == 0:
 else: #exit script if the previous conditions do not hold
   sys.exit("syntax is caseofuse7-4.py --input filename [--subs_mat matrixname --block_size number]")
 
-# python.exe align.py --input GHRs.fasta --subs_mat blosum62 --block_size 90 
-
-
+# python.exe align.py --input GHRs.fasta --subs_mat blosum62 --block_size 90
