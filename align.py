@@ -217,5 +217,3 @@ elif my_dict['--subs_mat'] == 0 and my_dict['--block_size'] == 0:
   print nw_protein(my_dict['--input'])
 else: #exit script if the previous conditions do not hold
   sys.exit(ERROR1)
-
-# py -2.7 align.py --input GHRs.fasta --subs_mat blosum62 --block_size 90
