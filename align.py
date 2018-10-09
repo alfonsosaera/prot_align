@@ -19,8 +19,8 @@ import sys # to read arguments from command line
 # set variables#
 ################
 ERROR1 = "syntax is align.py --input filename [--subs_mat matrixname --block_size number]"
-INS = 4
-DEL = 2
+INS = 4 # insertion penalty
+DEL = 2 # deletion penalty
 
 #############
 # FUNCTIONS #
@@ -163,24 +163,21 @@ def print_alignment(fasta_file, substitution_matrix, block_size):
   pattern,text = read_fasta(fasta_file)[0][1], read_fasta(fasta_file)[1][1]
   pattern_name, text_name = read_fasta(fasta_file)[0][0], read_fasta(fasta_file)[1][0]
   line1, line2, line3, score, CIGAR = pretty_alignment(pattern,text,substitution_matrix) #alignment only for testing
-  if block_size == "inf" or block_size == "all" or block_size == 0:
-    return line1+"\n"+line2+"\n"+line3+"\n"
-  else:
-    aa1_len = 0
-    aa2_len = 0
-    result = ""
-    for index in range(0, len(line1), block_size):
-      aa1 = line1[index : index + block_size]
-      aa2 = line3[index : index + block_size]
-      aa1_len += len(aa1.replace("-",""))
-      aa2_len += len(aa2.replace("-",""))
-      result = result + "\n" +\
-      pattern_name + "\t" + aa1 + "  " + str(aa1_len) + "\n" +\
-      "\t" + line2[index : index + block_size] + "\n" +\
-      text_name + "\t" + aa2 + "  " + str(aa2_len) + "\n"
-      if (index + block_size) > len(line1):
-        break
-    return score, result, CIGAR #CIGAR is returned only for testing
+  aa1_len = 0
+  aa2_len = 0
+  result = ""
+  for index in range(0, len(line1), block_size):
+    aa1 = line1[index : index + block_size]
+    aa2 = line3[index : index + block_size]
+    aa1_len += len(aa1.replace("-",""))
+    aa2_len += len(aa2.replace("-",""))
+    result = result + "\n" +\
+    pattern_name + "\t" + aa1 + "  " + str(aa1_len) + "\n" +\
+    "\t" + line2[index : index + block_size] + "\n" +\
+    text_name + "\t" + aa2 + "  " + str(aa2_len) + "\n"
+    if (index + block_size) > len(line1):
+      break
+  return score, result, CIGAR #CIGAR is returned only for testing
 
 def nw_protein(fasta_file, substitution_matrix = "blosum62", block_size = 70):
   # print alignment of the first 2 sequences in input file.fasta and the
