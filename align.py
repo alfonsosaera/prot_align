@@ -1,7 +1,30 @@
+#!/usr/bin/env python2
+
+# Alfonso Saera Vila
+# 09/10/2018
+
+# Usage:
+# Windows:
+#    py -2.7 align.py --input GHRs.fasta --subs_mat blosum62 --block_size 90
+# LINUX
+#    align.py --input GHRs.fasta --subs_mat blosum62 --block_size 90
+#
+# --input is mandatory. Needs path to the file in fasta format
+# --subs_mat is optional. Accepts blosum45, blosum62 (default) and blosum80
+# --block_size is optional. Default is 70
+
 import sys # to read arguments from command line
 
+################
+# set variables#
+################
 ERROR1 = "syntax is align.py --input filename [--subs_mat matrixname --block_size number]"
+INS = 4
+DEL = 2
 
+#############
+# FUNCTIONS #
+#############
 def print_dp_matrix(pattern, text, dp_matrix):
   # print the dynamic programming matrix with row and cols titles
   header = list(" -"+text)
@@ -65,16 +88,16 @@ def edit_distance_dp(pattern,text, substitution_matrix):
   # Init dynamic programming matrix
   dp_matrix = [[0 for i in range(len(text)+1)] for j in range(len(pattern)+1)]
   for i in range(len(pattern)+1):
-    dp_matrix[i][0] = -2*i
+    dp_matrix[i][0] = -DEL*i
   for j in range(len(text)+1):
-    dp_matrix[0][j] = -4*j
+    dp_matrix[0][j] = -INS*j
   # Compute cells
   for i in range(1,len(pattern)+1):
     for j in range(1, len(text)+1):
       dp_matrix[i][j] = max(
         dp_matrix[i-1][j-1] + (score_match((pattern[i-1], text[j-1]), substitution_matrix)),
-        dp_matrix[i][j-1] - 4, #insertion
-        dp_matrix[i-1][j] - 2) #deletion
+        dp_matrix[i][j-1] - INS, #insertion
+        dp_matrix[i-1][j] - DEL) #deletion
   # Print matrix, comment for big alignments
   #print_dp_matrix(pattern, text, dp_matrix)
   # Generate score and CIGAR
@@ -166,10 +189,6 @@ def nw_protein(fasta_file, substitution_matrix = "blosum62", block_size = 70):
   (score, alignment, CIGAR) = print_alignment(fasta_file, substitution_matrix, block_size) #CIGAR only for testing. Comment next line unless testing
   #print CIGAR
   return "\nAlignment score is: " + str(score) + "\n" + alignment
-
-
-
-
 
 ##################################
 # reading command line arguments #
