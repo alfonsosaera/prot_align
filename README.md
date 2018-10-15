@@ -1,6 +1,6 @@
 # prot_align
 
-Here you can find the python script I did as part of my MSc in Bioinformatics
+Here you can find a python script I did as part of my MSc in Bioinformatics
 at UAB.
 
 The script aligns two protein sequences from a Multi-FASTA file using a
@@ -11,9 +11,15 @@ insertion has a penalty of -4, each deletion has a penalty of -2, and each
 substitution has a different cost depending on the amino acid substituted using
 the specified BLOSUM matrix.
 
-Running the following code in a Windows terminal
+The `biopython` module is required to use the predefined substitution matrices.
+
+Running the following code in a __Windows__
 ```
 py -2.7 align.py --input .\\data\\GHRs.fasta --block_size 90
+```
+or __Linux__ terminal
+```
+python2 align.py --input ./data/GHRs.fasta --block_size 90
 ```
 will return
 ```
